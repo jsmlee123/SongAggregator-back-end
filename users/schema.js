@@ -10,8 +10,8 @@ const schema = mongoose.Schema(
     doh: { type: Date, default: Date.now },
     role: {
       type: String,
-      default: "USER",
-      enum: ["ADMIN", "FACULTY", "STUDENT", "USER"],
+      default: "LISTENER",
+      enum: ["LISTENER", "ARTIST"],
     },
   },
   { collection: "users" }
