@@ -3,10 +3,7 @@ import mongoose, { SchemaType } from "mongoose";
 const schema = mongoose.Schema(
   {
     SongName: { type: String, required: true},
-    ArtistId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
-    },
+    ArtistName: {type: String, required: true},
     SongDescription: { type: String, required: false },
     DateCreated: { type: Date, required: false },
     SongURL: { type: String, required: false},
@@ -14,7 +11,12 @@ const schema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "albums",
       required: false
-  }
+    },
+    ArtistId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: false
+  },
   },
   { collection: "songs" }
 );
