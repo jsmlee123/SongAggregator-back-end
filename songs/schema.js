@@ -20,4 +20,6 @@ const schema = mongoose.Schema(
   },
   { collection: "songs" }
 );
+
+schema.index({ SongName: 1, ArtistName: 1 }, { unique: true });
 export default schema;

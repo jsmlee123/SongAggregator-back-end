@@ -2,9 +2,6 @@
 import session from "express-session";
 import mongoose from "mongoose";
 import express from "express";
-import UserRoutes from "./users/routes.js";
-import FollowsRoutes from "./follows/routes.js";
-import LikesRoutes from "./likes/routes.js";
 import cors from "cors";
 import SongRoutes from "./songs/routes.js";
 import AlbumRoutes from "./albums/routes.js";
@@ -14,7 +11,8 @@ mongoose.connect("mongodb+srv://global:root123@cluster0.wgzjngx.mongodb.net/back
 const app = express();
 app.use(cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: '*',
+    
 }));
 const sessionOptions = {
     secret: "any string",
