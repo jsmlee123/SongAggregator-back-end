@@ -14,7 +14,7 @@ mongoose.connect("mongodb+srv://global:root123@cluster0.wgzjngx.mongodb.net/back
 const app = express();
 app.use(cors({
     credentials: true,
-    origin: process.env.FRONTEND_URL,
+    origin: "http://localhost:3000",
 }));
 const sessionOptions = {
     secret: "any string",
@@ -33,7 +33,7 @@ app.use(session(sessionOptions));
 
 app.use(express.json());
 
-//UserRoutes(app);
+UserRoutes(app);
 SongRoutes(app);
 AlbumRoutes(app);
 
