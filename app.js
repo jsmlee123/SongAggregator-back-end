@@ -7,6 +7,7 @@ import FollowsRoutes from "./follows/routes.js";
 import LikesRoutes from "./likes/routes.js";
 import cors from "cors";
 import SongRoutes from "./songs/routes.js";
+import AlbumRoutes from "./albums/routes.js";
 
 mongoose.connect("mongodb+srv://global:root123@cluster0.wgzjngx.mongodb.net/backend?retryWrites=true&w=majority");
 
@@ -34,5 +35,6 @@ app.use(express.json());
 
 //UserRoutes(app);
 SongRoutes(app);
+AlbumRoutes(app);
 
 app.listen(4000);

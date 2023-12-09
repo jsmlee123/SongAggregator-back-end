@@ -9,7 +9,12 @@ const schema = mongoose.Schema(
     },
     SongDescription: { type: String, required: false },
     DateCreated: { type: Date, required: false },
-    SongURL: { type: String, required: false}
+    SongURL: { type: String, required: false},
+    AlbumId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "albums",
+      required: false
+  }
   },
   { collection: "songs" }
 );

@@ -41,9 +41,16 @@ function SongRoutes(app) {
     res.json(status);
   }
 
+  const findAllSongsByAlbum = async (req, res) => {
+    const { aid } = req.params;
+    const songs = dao.findSongByAlbumId(aid);
+    res.json(songs);
+  }
+
 
   app.post("/api/songs", addSong);
   app.get("/api/songs", findAllSongs);
+  app.get("api/songs/album/:aid", findAllSongsByAlbum)
   app.put("/api/songs/:id", updateSong);
   app.delete("/api/songs/:id", deleteSong);
 }

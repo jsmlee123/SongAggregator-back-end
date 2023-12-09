@@ -6,3 +6,4 @@ export const createSong = (song) => model.create(song);
 export const updateSong = (sid, song) =>
   model.updateOne({ _id: sid }, { $set: song });
 export const deleteSong = (sid) => model.deleteOne({ _id: sid });
+export const findSongByAlbumId = (aid) => model.find({AlbumId: aid});
