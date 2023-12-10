@@ -10,4 +10,4 @@ export const createReview = (review) =>
   model.create(review);
 export const updateReview = (rid, review) =>
   model.updateOne({ _id: rid }, { $set: review });
-export const deleteSong = (rid) => model.deleteOne({ _id: rid });
+export const deleteReview = (rid) => model.deleteOne({ _id: rid });
