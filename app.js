@@ -8,6 +8,7 @@ import AlbumRoutes from "./albums/routes.js";
 import UserRoutes from "./users/routes.js";
 import ReviewRoutes from "./reviews/routes.js";
 import LikesRoutes from "./likes/routes.js";
+import FollowsRoutes from "./follows/routes.js"
 
 mongoose.connect("mongodb+srv://global:root123@cluster0.wgzjngx.mongodb.net/backend?retryWrites=true&w=majority");
 
@@ -39,6 +40,7 @@ app.use(express.json());
 UserRoutes(app);
 SongRoutes(app);
 AlbumRoutes(app);
+FollowsRoutes(app);
 ReviewRoutes(app);
 LikesRoutes(app);
 
