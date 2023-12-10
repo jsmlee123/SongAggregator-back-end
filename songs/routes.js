@@ -13,14 +13,12 @@ function SongRoutes(app) {
 
     songObj["SongName"] = req.body["SongName"];
     songObj["ArtistName"] = req.body["ArtistName"]
-    const song = dao.findSongByArtistName(songObj["ArtistName"], songObj["SongName"])
-    if (song) {
-      res.json(song);
-      return;
-    }
 
     if ("ArtistId" in req.body) {
       songObj["ArtistId"] = req.body["ArtistId"];
+    }
+    if ("ImageURL" in req.body) {
+      songObj["ImageURL"] = req.body["ImageURL"];
     }
     if ("SongDescription" in req.body) {
       songObj["SongDescription"] = req.body["SongDescription"]
@@ -32,8 +30,13 @@ function SongRoutes(app) {
       songObj["SongURL"] = req.body["SongURL"]
     }
 
-    const status = await dao.createSong(songObj);
-    res.json(status);
+    try {
+      const status = await dao.createSong(songObj);
+      res.json(status);
+    } catch (error) {
+      const song = await dao.findSongByArtistName(songObj["ArtistName"], songObj["SongName"]);
+      res.json(song)
+    }
   };
 
   const updateSong = async (req, res) => {
@@ -51,24 +54,31 @@ function SongRoutes(app) {
 
   const findAllSongsByAlbum = async (req, res) => {
     const { aid } = req.params;
-    const songs = dao.findSongByAlbumId(aid);
+    const songs = await dao.findSongByAlbumId(aid);
     res.json(songs);
   }
 
   const findSongByArtistName = async (req, res) => {
     const { ArtistName, SongName } = req.params;
-    const song = dao.findSongByArtistName(ArtistName, SongName);
+    const song = await dao.findSongByArtistName(ArtistName, SongName);
 
     res.json(song);
   }
 
+  const findSongByName = async (req, res) => {
+    const { SongName } = req.params;
+    const song = await dao.findSongByName(SongName);
+    res.json(song);
+  }
 
+  app.get("/api/songs/:ArtistName/:SongName", findSongByArtistName);
   app.post("/api/songs", addSong);
   app.get("/api/songs", findAllSongs);
+  app.get("/api/song/:SongName", findSongByName);
   app.get("api/songs/album/:aid", findAllSongsByAlbum);
-  app.get("api/songs/:ArtistName/:SongName", findSongByArtistName);
   app.put("/api/songs/:id", updateSong);
   app.delete("/api/songs/:id", deleteSong);
+  
 }
 
 export default SongRoutes;
