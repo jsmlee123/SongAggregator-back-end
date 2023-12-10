@@ -4,10 +4,9 @@ import * as dao from "./dao.js";
 
 function LikesRoutes(app) {
   const createUserLikesSong = async (req, res) => {
-    const { UserId, SongId } = req.body;
+    const { userId, songId } = req.params;
 
-    const likeObj = { UserId, SongId};
-    console.log(likeObj);
+    const likeObj = { UserId: userId, SongId: songId};
     let like = await dao.findLikeBySongUser(likeObj); 
     if (like) {
       res.status(403).send("User already liked song!");
@@ -44,8 +43,19 @@ function LikesRoutes(app) {
     res.json(songs);
   };
 
-  app.post("/api/likes", createUserLikesSong);
+  const getUserLike = async (req, res) => {
+      const { songId, userId } = req.params;
+      try {
+        const like = await dao.findLikeBySongUser({SongId: songId, UserId: userId});
+        res.json(like);
+      } catch (e) {
+        res.status(400).send(e);
+      }
+  };
+
+  app.post("/api/likes/:songId/:userId", createUserLikesSong);
   app.delete("/api/likes/:songId/:userId", deleteUserLikesSong);
+  app.get("/api/likes/:songId/:userId", getUserLike);
   app.get("/api/users/likes/song/:songId", findUsersSongsLikes);
   app.get("/api/songs/users/likes/:userId", findSongsLikedByUser);
 }
