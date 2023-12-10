@@ -1,7 +1,5 @@
 import * as dao from "./dao.js";
 
-// let currentUser = null;
-
 function SongRoutes(app) {
   const findAllSongs = async (req, res) => {
     const songs = await dao.findAllSongs();
@@ -31,8 +29,8 @@ function SongRoutes(app) {
     }
 
     try {
-      const status = await dao.createSong(songObj);
-      res.json(status);
+      const song = await dao.createSong(songObj);
+      res.json(song);
     } catch (error) {
       const song = await dao.findSongByArtistName(songObj["ArtistName"], songObj["SongName"]);
       res.json(song)
