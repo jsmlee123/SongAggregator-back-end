@@ -1,45 +1,53 @@
+import { findSongById } from "../songs/dao.js";
+import { findUserById } from "../users/dao.js";
 import * as dao from "./dao.js";
 
 function LikesRoutes(app) {
-  const createUserLikesAlbum = async (req, res) => {
-    const { userId, albumId, title } = req.params;
-    if (userId === undefined) {
-      const user = req.session.currentUser._id;
-      const like = await dao.createUserLikesAlbum(user, albumId, title);
-      res.json(like);
-      return;
+  const createUserLikesSong = async (req, res) => {
+    const { UserId, SongId } = req.body;
+
+    const likeObj = { UserId, SongId};
+    console.log(likeObj);
+    let like = await dao.findLikeBySongUser(likeObj); 
+    if (like) {
+      res.status(403).send("User already liked song!");
     }
-    const like = await dao.createUserLikesAlbum(userId, albumId, title);
+
+    like = await dao.createUserLikes(likeObj);
     res.json(like);
   };
-  const deleteUserLikesAlbum = async (req, res) => {
-    const { userId, albumId } = req.params;
-    if (userId === undefined) {
-      const user = req.session.currentUser._id;
-      const status = await dao.deleteUserLikesAlbum(userId, albumId);
-      res.json(status);
-      return;
-    }
-    const status = await dao.deleteUserLikesAlbum(userId, albumId);
+
+  const deleteUserLikesSong = async (req, res) => {
+    const { userId, songId } = req.params;
+    const status = await dao.deleteUserLikes(userId, songId);
     res.json(status);
   };
-  const findUsersLikedAlbum = async (req, res) => {
-    const { albumId } = req.params;
-    const users = await dao.findUsersLikedAlbum(albumId);
+  const findUsersSongsLikes = async (req, res) => {
+    const { songId } = req.params;
+    const userIds = await dao.findUsersSongLikes(songId);
+    const users = [];
+    for (let i = 0; i < userIds.length; i +=1){
+      users.push(await findUserById(userIds[i].UserId));
+    }
+    
     res.json(users);
   };
-  const findAlbumsLikedByUser = async (req, res) => {
+  const findSongsLikedByUser = async (req, res) => {
     const { userId } = req.params;
-    const albums = await dao.findAlbumsLikedByUser(userId);
-    res.json(albums);
+    const songIDs = await dao.findSongsUserLikes(userId);
+    const songs = [];
+    
+    for (let i = 0; i < songIDs.length; i +=1){
+      songs.push(await findSongById(songIDs[i].SongId));
+    }
+
+    res.json(songs);
   };
 
-  app.post("/api/users/:userId/likes/:albumId", createUserLikesAlbum);
-  app.post("/api/users/likes/:albumId/title/:title", createUserLikesAlbum);
-  app.delete("/api/users/:userId/likes/:albumId", deleteUserLikesAlbum);
-  app.delete("/api/users/likes/:albumId", deleteUserLikesAlbum);
-  app.get("/api/albums/:albumId/likes", findUsersLikedAlbum);
-  app.get("/api/users/:userId/likes", findAlbumsLikedByUser);
+  app.post("/api/likes", createUserLikesSong);
+  app.delete("/api/likes/:songId/:userId", deleteUserLikesSong);
+  app.get("/api/users/likes/song/:songId", findUsersSongsLikes);
+  app.get("/api/songs/users/likes/:userId", findSongsLikedByUser);
 }
 
 export default LikesRoutes;

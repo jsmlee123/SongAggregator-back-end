@@ -1,12 +1,17 @@
 import model from "./model.js";
 
-export const createUserLikesAlbum = (userId, albumId, title) =>
-  model.create({ user: userId, albumId, title });
+export const createUserLikes= (like) =>
+  model.create(like);
+  
+export const deleteUserLikes = (userId, songId) =>
+  model.deleteOne({ UserId: userId, SongId: songId });
 
-export const deleteUserLikesAlbum = (userId, albumId) =>
-  model.deleteOne({ user: userId, albumId });
+export const findLikeBySongUser = (song) =>
+  model.findOne(song);
 
-export const findUsersLikedAlbum = (albumId) =>
-  model.find({ albumId }).populate("user").exec();
+export const findUsersSongLikes = (songId) => 
+  model.find({ SongId: songId });
 
-export const findAlbumsLikedByUser = (userId) => model.find({ user: userId });
+export const findSongsUserLikes = (userId) => 
+  model.find({ UserId: userId });
+
