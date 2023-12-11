@@ -42,7 +42,7 @@ function FollowsRoutes(app) {
     
     const users = [];
     for (let i = 0; i < userIds.length; i +=1) {
-      users.push( await findUserById(userIds[i].follower));
+      users.push( await findUserById(userIds[i].followed));
     }
 
     res.json(users);
