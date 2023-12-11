@@ -1,3 +1,4 @@
+import { findUserById } from "../users/dao.js";
 import * as dao from "./dao.js";
 
 function FollowsRoutes(app) {
@@ -5,6 +6,12 @@ function FollowsRoutes(app) {
     const { followerId, followedId } = req.params;
     if (followerId === undefined) {
       const follower = req.session.currentUser._id;
+      const currFollow = await dao.findFollowByFollowerFollowing(followerId, followedId);
+      if (currFollow) {
+        res.json(currFollow);
+        return;
+      }
+
       const follow = await dao.createUserFollowsUser(follower, followedId);
       res.json(follow);
       return;
@@ -19,12 +26,24 @@ function FollowsRoutes(app) {
   };
   const findUsersFollowingUser = async (req, res) => {
     const { followedId } = req.params;
-    const users = await dao.findUsersFollowingUser(followedId);
+    const userIds= await dao.findUsersFollowingUser(followedId);
+
+    const users = [];
+    for (let i = 0; i < userIds.length; i +=1) {
+      users.push( await findUserById(userIds[i].follower));
+    }
+
     res.json(users);
   };
   const findUsersFollowedByUser = async (req, res) => {
     const { followerId } = req.params;
-    const users = await dao.findUsersFollowedByUser(followerId);
+    const userIds = await dao.findUsersFollowedByUser(followerId);
+    
+    const users = [];
+    for (let i = 0; i < userIds.length; i +=1) {
+      users.push( await findUserById(userIds[i].follower));
+    }
+
     res.json(users);
   };
 
@@ -34,8 +53,8 @@ function FollowsRoutes(app) {
     "/api/users/:followerId/follows/:followedId",
     deleteUserFollowsUser
   );
-  app.get("/api/users/:followedId/followers", findUsersFollowingUser);
-  app.get("/api/users/:followerId/following", findUsersFollowedByUser);
+  app.get("/api/follows/followers/:followedId", findUsersFollowingUser);
+  app.get("/api/follows/following/:followerId", findUsersFollowedByUser);
 }
 
 export default FollowsRoutes;
