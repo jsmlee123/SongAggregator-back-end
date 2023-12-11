@@ -12,5 +12,5 @@ const schema = mongoose.Schema(
   },
   { collection: "follows" }
 );
-
+schema.index({ follower: 1, followed: 1 }, { unique: true });
 export default schema;

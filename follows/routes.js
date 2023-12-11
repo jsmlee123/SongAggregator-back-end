@@ -4,19 +4,19 @@ import * as dao from "./dao.js";
 function FollowsRoutes(app) {
   const createUserFollowsUser = async (req, res) => {
     const { followerId, followedId } = req.params;
-    //const currFollow = await dao.findFollowByFollowerFollowing(followerId, followedId);
-    //if (currFollow) {
-    //  res.json(currFollow);
-    //  return;
-    //}
+    const currFollow = await dao.findFollowByFollowerFollowing(followerId, followedId);
+    if (currFollow) {
+      res.json(currFollow);
+      return;
+    }
 
-    //if (followerId === undefined) {
-    //  const follower = req.session.currentUser._id;
-    //  const follow = await dao.createUserFollowsUser(follower, followedId);
-    //  res.json(follow);
-    //  return;
-    //}
-    //console.log(followerId)
+    if (followerId === undefined) {
+      const follower = req.session.currentUser._id;
+      const follow = await dao.createUserFollowsUser(follower, followedId);
+      res.json(follow);
+      return;
+    }
+    console.log(followerId)
     const follow = await dao.createUserFollowsUser(followerId, followedId);
     res.json(follow);
   };
