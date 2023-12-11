@@ -9,4 +9,4 @@ export const findUsersFollowingUser = (followedId) =>
 export const findUsersFollowedByUser = (follwerId) =>
   model.find({ follower: follwerId });
 export const findFollowByFollowerFollowing = (followerId, followedId) =>
-  model.find({ follower: followerId, followed: followedId });
+  model.findOne({ follower: followerId, followed: followedId });
