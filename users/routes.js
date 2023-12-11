@@ -53,9 +53,16 @@ function UserRoutes(app) {
       res.status(403).send("Username already taken");
       return;
     }
-    const currentUser = await dao.createUser({ username, password });
-    req.session["currentUser"] = currentUser;
-    res.json(currentUser);
+    try {
+      const currentUser = await dao.createUser({ username, password });
+      req.session["currentUser"] = currentUser;
+      console.log(currentUser);
+      res.json(currentUser);
+    } catch (error) {
+      res.status(403).send("Forbidden username or password");
+    }
+    
+    
   };
   const account = (req, res) => {
     const currentUser = req.session["currentUser"];
