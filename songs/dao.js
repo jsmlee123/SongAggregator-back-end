@@ -6,6 +6,9 @@ export const findSongByName = (SongName) =>(
   model.find({ SongName }));
 export const findSongByArtistName = (ArtistName, SongName) =>(
   model.findOne({ ArtistName, SongName }));
+export const findSongByArtistId = (aid) => {
+  model.find({ ArtistId: aid });
+}
 export const createSong = (song) => 
   model.create(song);
 export const updateSong = (sid, song) =>
