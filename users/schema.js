@@ -3,8 +3,8 @@ const schema = mongoose.Schema(
   {
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    firstName: {type: String, requried: false},
-    lastName: {type: String, requried: false},
+    firstName: {type: String, requried: true},
+    lastName: {type: String, requried: true},
     email: {type: String, requried: false},
     dob: { type: Date },
     doh: { type: Date, default: Date.now },
