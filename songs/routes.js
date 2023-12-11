@@ -71,8 +71,7 @@ function SongRoutes(app) {
 
   const findAllSongsByArtist = async (req, res) => {
       const { uid } = req.params;
-      const songs = await dao.findSongByArtistId(uid)
-
+      const songs = await dao.findSongsByArtistId(uid);
       res.json(songs);
   }
 
