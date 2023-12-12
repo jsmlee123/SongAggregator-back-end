@@ -4,8 +4,16 @@ const schema = mongoose.Schema(
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     firstName: {type: String, requried: true},
-    lastName: {type: String, requried: true},
-    email: {type: String, requried: false},
+    lastName: {
+      type: String, 
+      requried: true,
+      validate: (v) => v!= ""
+    },
+    email: {
+      type: String, 
+      requried: false,
+      validate: (v) => v!= ""
+    },
     dob: { type: Date },
     doh: { type: Date, default: Date.now },
     role: {
