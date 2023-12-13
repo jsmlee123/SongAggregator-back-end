@@ -1,3 +1,4 @@
+import { findUserByUsername } from "../users/dao.js";
 import * as dao from "./dao.js";
 
 function SongRoutes(app) {
@@ -12,9 +13,14 @@ function SongRoutes(app) {
     songObj["SongName"] = req.body["SongName"];
     songObj["ArtistName"] = req.body["ArtistName"]
 
+    const user = await findUserByUsername(songObj["ArtistName"]);
+    if (user && user.role === "ARTIST") {
+      songObj["ArtistId"] = user._id;
+    }
+
     if ("ArtistId" in req.body) {
       songObj["ArtistId"] = req.body["ArtistId"];
-    }
+    } 
     if ("ImageURL" in req.body) {
       songObj["ImageURL"] = req.body["ImageURL"];
     }
@@ -40,7 +46,8 @@ function SongRoutes(app) {
   const updateSong = async (req, res) => {
     const { id } = req.params;
     const song = req.body;
-    const status = await dao.updateSong(id, song);
+    const status = await dao.updateSongBody(id, song);
+    console.log(status);
     res.json(status);
   };
 
@@ -75,12 +82,19 @@ function SongRoutes(app) {
       res.json(songs);
   }
 
+  const findSongByID = async (req, res) => {
+    const { id } = req.params;
+    const song = await dao.findSongById(id);
+    res.json(song);
+  }
+
   app.get("/api/songs/:ArtistName/:SongName", findSongByArtistName);
   app.post("/api/songs", addSong);
   app.get("/api/songs", findAllSongs);
   app.get("/api/song/:SongName", findSongByName);
   app.get("api/songs/album/:aid", findAllSongsByAlbum);
   app.get("/api/artist/songs/:uid", findAllSongsByArtist)
+  app.get("/api/songs/:id", findSongByID)
   app.put("/api/songs/:id", updateSong);
   app.delete("/api/songs/:id", deleteSong);
   

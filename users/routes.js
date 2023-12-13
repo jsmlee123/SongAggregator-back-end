@@ -1,3 +1,4 @@
+import { findSongByArtist, findSongByArtistName, findSongsByArtistId, updateSong } from "../songs/dao.js";
 import * as dao from "./dao.js";
 
 function UserRoutes(app) {
@@ -47,20 +48,29 @@ function UserRoutes(app) {
     res.sendStatus(200);
   };
   const signup = async (req, res) => {
-    const { username, password, firstName, lastName } = req.body;
+    const { username, password, firstName, lastName, role } = req.body;
     const user = await dao.findUserByUsername(username);
     if (user) {
       res.status(403).send("Username already taken");
       return;
     }
     try {
-      const currentUser = await dao.createUser({ username, password, firstName, lastName });
+      const currentUser = await dao.createUser({ username, password, firstName, lastName, role });
       req.session["currentUser"] = currentUser;
+
+      const songs = await findSongByArtist(currentUser.username);
+      
+      for (const song of songs) {
+        
+        const status = await updateSong(song._id, {...song, ArtistId: currentUser._id});
+        console.log(status);
+      }
+    
       res.json(currentUser);
     } catch (error) {
+      console.log(error);
       res.status(403).send("Forbidden username or password");
     }
-    
     
   };
   const account = (req, res) => {
